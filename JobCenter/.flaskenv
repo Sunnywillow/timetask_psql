@@ -1,0 +1,6 @@
+FLASK_APP=app
+FLASK_ENV=deveployment
+#FLASK_ENV=production
+FLASK_DEBUG=1
+MAIL_USERNAME=yanxi530847268@qq.com
+MAIL_PASSWORD=lctgpvpygfjdbhah
