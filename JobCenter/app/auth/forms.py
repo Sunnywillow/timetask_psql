@@ -20,6 +20,9 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     email = StringField('邮箱', validators=[Required(), Length(1, 64),
                                            Email()])
+    mobile = StringField('手机号码', validators=[Required(), Length(11, 11), Regexp('^1[35789]d{9}$', 0, '手机号码不合法')],
+                         render_kw={'placeholder': '输入手机号'})
+    msg_code = StringField('验证码', validators=[Required(), Length(6)])
     username = StringField('用户名', validators=[
         Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
                                           'Usernames must have only letters, '

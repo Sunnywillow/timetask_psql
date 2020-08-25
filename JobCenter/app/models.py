@@ -55,8 +55,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
-    mobile = db.Column(db.String(11), unique=True, nullable=False)  # 手机号
-    yanzhengma = db.Column(db.String(6), unique=True, nullable=False)
+    mobile = db.Column(db.Integer, unique=True, nullable=True)  # 手机号
     username = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
@@ -167,6 +166,12 @@ login_manager.anonymous_user = AnonymousUser
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+class AccessCode(db.Model):
+    __tablename__ = 'accesscodes'
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(6), unique=True, nullable=True)
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow())
 
 class Weidian(db.Model):
     __tablename__ = 'weidian'

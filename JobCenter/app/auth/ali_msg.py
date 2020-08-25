@@ -7,6 +7,7 @@ import json
 # 连接阿里云
 client = AcsClient('LTAI4G6m4kFpz4EAdcMyk8Bz', 'k8FxkuKjOCwNV3d362T5G3muIrFedE', 'cn-hangzhou')
 
+
 def aliyun_sms_send(code):
    # 构建请求
    request = CommonRequest()
@@ -17,7 +18,6 @@ def aliyun_sms_send(code):
    request.set_version('2017-05-25')
    request.set_action_name('SendSms')
 
-   sms_code = code
 
    # 自定义参数
    request.add_query_param('RegionId', "cn-hangzhou")
@@ -25,9 +25,19 @@ def aliyun_sms_send(code):
    request.add_query_param('SignName', "定时任务")
    request.add_query_param('TemplateCode', "SMS_200177064")
    request.add_query_param('TemplateParam', json.dumps({'code': code}))
-
    response = client.do_action(request)
-   # python2:  print(response)
-   print(str(response, encoding = 'utf-8'))
+   response_str = str(response, encoding='utf-8')
 
-sms_send = aliyun_sms_send()
+   # python2:  print(response)
+   print(str(response_str))
+   statusCode = json.loads(response_str).get('Code')
+
+   print("Code: %s" %statusCode)
+   if statusCode == 'OK':
+      # 发送成功
+      return 0
+   else:
+      # 发送失败
+      return -1
+
+# sms_send = aliyun_sms_send(18506243060)

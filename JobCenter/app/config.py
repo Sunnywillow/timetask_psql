@@ -26,6 +26,14 @@ postgresql_info = dict(
     password = '123456'
 )
 
+REDIS_DB_URL = {
+    'host': '127.0.0.1',
+    'port': 6379,
+    'password': '',
+    'db': 0
+}
+
+
 
 
 '''
@@ -40,7 +48,6 @@ MYSQL_URL = 'mysql+pymysql://%s:%s@%s:%s/%s?charset=utf8'%(mysql_info['username'
 POSTGRESQL_URL='postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/timetask'
 # engine = create_engine('postgresql+psycopg2://boss:123456@127.0.0.1/timetask')
 # apscheduler 配置
-
 
 class TaskConfig(object):
 
@@ -112,8 +119,9 @@ class TestingConfig(Config):
     pass
 
 class ProductionConfig(Config):
-    # SQLALCHEMY_DATABASE_URI = POSTGRESQL_URL
-    SQLALCHEMY_DATABASE_URI = MYSQL_URL
+    SQLALCHEMY_DATABASE_URI = POSTGRESQL_URL
+    # SQLALCHEMY_DATABASE_URI = MYSQL_URL
+
     # DEMO_ENV=False
 
 config = {

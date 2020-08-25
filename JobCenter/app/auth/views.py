@@ -16,7 +16,7 @@ from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 import time
-
+from .ali_msg import aliyun_sms_send
 
 
 @auth.before_app_request
@@ -34,34 +34,6 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('auth/unconfirmed.html')
-
-@auth.route("/sms_codes/<re(r'1[34578]\d{9}'):mobile>")
-def get_sms_code(mobile):
-    """获取短信验证码"""
-    # 1.获取参数
-    # 2. 校验参数
-    # 3. 业务逻辑处理
-    # 从redis中取出真实的图片验证码
-    # 判断图片验证码是否过期
-
-    # 与用户填写的值对比
-    # 判断手机号存在不，
-    try:
-        user = User.query.filter_by(mobile=mobile).first()
-    except Exception as e:
-        current_user.logger.error(e)
-    else:
-        if user is not None:
-            return jsonify("手机号已存在")
-        # 不存在则生成短信验证码
-        code = "%06d" % random.randint(0, 999999)
-        # 保存真实的短信验证码
-        try:
-
-        # 返回值
-
-
-
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -94,13 +66,54 @@ def logout():
     flash('You have been logged out.',"success")
     return redirect(url_for('auth.login'))
 
+
+msg = 0
+
+
+@auth.route("/sms_codes/<int:mobile>")
+def get_sms_code(mobile):
+    """获取短信验证码"""
+    # 1.获取参数
+    # 2. 校验参数
+    # 3. 业务逻辑处理
+    # 从redis中取出真实的图片验证码
+    # 判断图片验证码是否过期
+
+    # 与用户填写的值对比
+    # 判断手机号存在不，
+    # try:
+    user = User.query.filter_by(mobile=mobile).first()
+    # except Exception as e:
+    #     current_user.logger.error(e)
+    # else:
+    if user is not None:
+        return jsonify("手机号已存在")
+    # 不存在则生成短信验证码
+    code = "%06d" % random.randint(0, 999999)
+    # 保存真实的短信验证码
+
+    # 发送短信
+    # 返回值
+    result = aliyun_sms_send(code)
+    if result == 0:
+        return jsonify('发送成功')
+    else:
+        return jsonify('发送失败')
+
+
+
+
+
 @auth.route('/register1905', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data,
                     username=form.username.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    mobile=form.mobile.data,
+                    msg_code=form.msg_code.data
+        )
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
@@ -205,3 +218,4 @@ def change_email(token):
     else:
         flash('Invalid request.')
     return redirect(url_for('main.index'))
+
