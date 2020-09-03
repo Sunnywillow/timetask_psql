@@ -70,6 +70,8 @@ def register_extensions(app):
      
     db.init_app(app)
 
+
+
 # 注册蓝图
 def register_blueprints(app):
     app.register_blueprint(main_blueprint)

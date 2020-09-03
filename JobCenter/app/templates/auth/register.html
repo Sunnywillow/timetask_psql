@@ -1,15 +1,99 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+
 {% block title %}Flasky - Register{% endblock %}
 
 {% block page_content %}
+<script src="/opt/mywork/JobCenter/app/static/js/jquery-3.5.1.js"></script>
+
+
 <div class="page-header">
     <center><h1>Register</h1></center>
 </div>
 <div class="col-md-4"></div>
 <div class="col-md-4">
-    {{ wtf.quick_form(form) }}
+    <!--    {{ wtf.quick_form(form) }}-->
+    <form action="{{ url_for('auth.register') }}" method="post">
+<!--        {# csrf #}-->s
+<!--        {{ form.csrf_token }}-->
+        {{ form.username.label }}&nbsp&nbsp&nbsp&nbsp
+        {{form.username(style="color:red;",class='myself',placeholder='请输⼊⽤户名...') }}
+<!--        #给当前的标签添加属性和值 关键字参数-->
+<!--        #循环迭代取出验证失败的错误信息（也就是你在验证器⾥的属性message的值）-->
+        {% for error in form.username.errors %}
+        <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+        {{ form.password.label }}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        {{ form.password }}
+        {% for error in form.password.errors %}
+        <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+        {{ form.password2.label }}
+        {{ form.password2() }}
+        {% for error in form.password2.errors %}
+        <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+        {{ form.email.label }}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        {{ form.email() }}
+        {% for error in form.email.errors %}
+        <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+        {{ form.mobile.label }}
+        {{ form.mobile() }}
+        {% for error in form.mobile.errors %}
+        <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+        <!--图片验证码-->
+        {{ form.captcha_code.label }}
+        {{ form.captcha_code() }}
+        {% for error in form.captcha_code.errors %}
+        <br>
+        <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+
+
+
+            <div class="image_code1"  onclick="generateImageCode();"><img src="/auth/image_codes/231313"></div>
+            <script>
+                    // 保存图片验证码编号
+                 var imageCodeId = ""
+                function generateUUID() {
+                         var d = new Date().getTime();
+                         if
+
+                }
+
+                function generateImageCode() {
+                    // 形成图片验证码的后端地址， 设置到页面中， 让浏览器请求验证码图片
+                    // 生成图片验证码编号
+                    imageCodeId = generateUUID();
+                    // 是指图片url
+                        var url = 'auth/image_codes/' + imageCodeId;
+                    $(".image_code1 img").attr("src", )
+                }
+            </script>
+        <br>
+        {{ form.msg_code.label }}&nbsp&nbsp&nbsp&nbsp
+        {{ form.msg_code() }}
+        {% for error in form.msg_code.errors %}
+        <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+        {{ form.submit() }}
+    </form>
 </div>
 <div class="col-md-4"></div>
 {% endblock %}
+
+<script>
+        $(document).ready(function () {
+            generateImageCode();
+        })
+</script>

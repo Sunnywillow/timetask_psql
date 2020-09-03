@@ -6,11 +6,13 @@
 # @Last Modified time: 2019-05-15 16:50:44
 import random
 
-from flask import render_template, redirect, request, url_for, flash, jsonify
+from flask import render_template, redirect, request, url_for, flash, jsonify, current_app, make_response
 from flask_login import login_user, logout_user, login_required, \
     current_user
 from . import auth
 from .. import db
+
+
 from ..models import User,LoginLog
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
@@ -67,8 +69,47 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
-msg = 0
+from ..constants import IMAGE_CODE_REDIS_EXPIRES
+from .captchacode import captcha
+from ..get_redis import connect_redis, get_redis_data, set_redis_data
 
+@auth.route('/image_codes/<image_code_id>')
+def get_image_code(image_code_id):
+    """
+    获取图片验证码
+    ：params image_code_id: 图片验证码编号
+    : return: 图片验证码
+    """
+    # 获取参数
+    # 检验参数
+    # 业务逻辑处理
+    # 生成验证码图片
+    # 生成图片验证码，其返回为名字、文本、以及图片
+    name, text, image_data = captcha.generate_captcha()
+    # print(text)
+    # print(name)
+    # 验证码真是值与编号保存到redis中
+    try:
+        # print("asdasd", image_code_id)
+        set_redis_data('ImageCode_%s' % image_code_id, text, '120')
+    except Exception as e:
+        # 记录日志
+        current_app.logger.error(e)
+        return jsonify('保存图片验证码失败')
+
+    # 返回图片
+    response = make_response(image_data)
+
+    response.headers["Content-type"] = "image/png"
+
+    return response
+
+
+
+
+
+
+msg = 0
 
 @auth.route("/sms_codes/<int:mobile>")
 def get_sms_code(mobile):

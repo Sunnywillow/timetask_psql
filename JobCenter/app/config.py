@@ -29,8 +29,8 @@ postgresql_info = dict(
 REDIS_DB_URL = {
     'host': '127.0.0.1',
     'port': 6379,
-    'password': '',
-    'db': 0
+    # 'password': '',
+    # 'db': 0
 }
 
 
@@ -91,6 +91,7 @@ class Config:
     # COMPANY_MAIL_SUFFIX='sctux.com'
     # 用户注册功能开关: True:可注册；False: 关闭注册
     REGISTER = True
+
     
     # 邮件信息
     MAIL_SERVER = 'smtp.qq.com'
@@ -102,6 +103,8 @@ class Config:
     FLASKY_MAIL_SENDER ='yanxi530847268@qq.com'
     FLASKY_ADMIN ='yanxi530847268@qq.com' # os.environ.get('FANXIANG_ADMIN')
 
+    ACCESS_KEY_SECRET = os.environ.get('ACCESS_KEY_SECRET')
+    ADMIN_PHOME_NUMBER = os.environ.get('ADMIN_PHOME_NUMBER')
     # 配置类可以定义 init_app() 类方法，其参数是程序实例。
     # 在这个方法中，可以执行对当前 环境的配置初始化。
     # 现在，基类 Config 中的 init_app() 方法为空。

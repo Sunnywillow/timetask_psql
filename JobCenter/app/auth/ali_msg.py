@@ -4,8 +4,14 @@
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
 import json
+import os
+
 # 连接阿里云
-client = AcsClient('LTAI4G6m4kFpz4EAdcMyk8Bz', 'k8FxkuKjOCwNV3d362T5G3muIrFedE', 'cn-hangzhou')
+ACCESS_KEY_APPID = os.environ.get('ACCESS_KEY_APPID')
+ACCESS_KEY_SECRET = os.environ.get('ACCESS_KEY_SECRET')
+ADMIN_PHOME_NUMBER = os.environ.get('ADMIN_PHOME_NUMBER')
+
+client = AcsClient(ACCESS_KEY_APPID, ACCESS_KEY_SECRET, 'cn-hangzhou')
 
 
 def aliyun_sms_send(code):
@@ -21,7 +27,7 @@ def aliyun_sms_send(code):
 
    # 自定义参数
    request.add_query_param('RegionId', "cn-hangzhou")
-   request.add_query_param('PhoneNumbers', "18506243060")
+   request.add_query_param('PhoneNumbers', ADMIN_PHOME_NUMBER)
    request.add_query_param('SignName', "定时任务")
    request.add_query_param('TemplateCode', "SMS_200177064")
    request.add_query_param('TemplateParam', json.dumps({'code': code}))
