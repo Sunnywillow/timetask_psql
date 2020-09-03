@@ -46,4 +46,4 @@ def aliyun_sms_send(code):
       # 发送失败
       return -1
 
-# sms_send = aliyun_sms_send(18506243060)
+# sms_send = aliyun_sms_send(phonenumber)
